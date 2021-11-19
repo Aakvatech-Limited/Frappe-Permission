@@ -20,8 +20,9 @@
   "ref_doctype",
   "ref_docname",
   "section_break_12",
-  "docname",
   "doctype_name",
+  "column_break_16",
+  "docname",
   "row_id"
  ],
  "fields": [
@@ -118,6 +119,8 @@
    "depends_on": "role",
    "fieldname": "role_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Role Name",
    "mandatory_depends_on": "role",
    "options": "Role",
@@ -142,12 +145,16 @@
    "fieldtype": "Datetime",
    "label": "Posting Date",
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_16",
+   "fieldtype": "Column Break"
   }
  ],
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-11-16 23:49:05.242641",
+ "modified": "2021-11-16 23:56:33.077117",
  "modified_by": "Administrator",
  "module": "Permission",
  "name": "Permission Record",

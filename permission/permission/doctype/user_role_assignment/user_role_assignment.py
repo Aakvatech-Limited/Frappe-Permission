@@ -1,14 +1,15 @@
 # Copyright (c) 2021, Totrox Technology and contributors
 # For license information, please see license.txt
 
-
 import frappe
 from frappe import _
-from frappe import permissions
 from frappe.model.document import Document
 
 
-class PermissionAssignment(Document):
+class UserRoleAssignment(Document):
+    def validate(self):
+        pass
+
     def on_submit(self):
         self.validate_role()
         self.create_permissions()
@@ -18,7 +19,7 @@ class PermissionAssignment(Document):
 
     def validate_role(self):
         user_assignments_list = frappe.get_all(
-            "Permission Assignment",
+            "User Role Assignment",
             filters={"user": self.user, "docstatus": 1, "name": ["!=", self.name]},
             fields=["name", "role"],
         )
@@ -29,13 +30,13 @@ class PermissionAssignment(Document):
                 )
                 if not overlappable:
                     frappe.throw(
-                        _("This User can't have more than one Permission Assignment")
+                        _("This User can't have more than one User Role Assignment")
                     )
         if frappe.db.exists("Role Level Policy", self.role):
             policy = frappe.get_doc("Role Level Policy", self.role)
             if policy.number_of_actors and int(policy.number_of_actors) > 0:
                 role_assignments_list = frappe.get_all(
-                    "Permission Assignment",
+                    "User Role Assignment",
                     filters={
                         "role": self.role,
                         "docstatus": 1,
@@ -51,16 +52,29 @@ class PermissionAssignment(Document):
             if not policy.overlappable:
                 if len(user_assignments_list) > 0:
                     frappe.throw(
-                        _("This User can't have more than one Permission Assignment")
+                        _("This User can't have more than one User Role Assignment")
                     )
-
-            for perm in self.role_permission_profile_detail:
+            permissions_dict = {}
+            if policy.kyosk_territory_type:
+                permissions_dict.setdefault(
+                    "Kyosk Territory Type", [policy.kyosk_territory_type]
+                )
+            for row in policy.role_permission_profile_detail:
+                permissions_dict.setdefault(row.doctype_name, [])
+                if row.docname not in permissions_dict[row.doctype_name]:
+                    permissions_dict[row.doctype_name].append(row.docname)
+            perm_list = []
+            if self.territory:
+                perm_list.append(
+                    frappe._dict(
+                        {"doctype_name": "Territory", "docname": self.territory}
+                    )
+                )
+            perm_list.extend(self.role_permission_profile_detail)
+            if len(perm_list) == 0:
+                return
+            for perm in perm_list:
                 doc = frappe.get_doc(perm.doctype_name, perm.docname)
-                permissions_dict = {}
-                for row in policy.role_permission_profile_detail:
-                    permissions_dict.setdefault(row.doctype_name, [])
-                    if row.docname not in permissions_dict[row.doctype_name]:
-                        permissions_dict[row.doctype_name].append(row.docname)
                 for key, value in permissions_dict.items():
                     fields = doc.meta.get(
                         "fields", {"fieldtype": "Link", "options": key}
@@ -83,28 +97,33 @@ class PermissionAssignment(Document):
     def create_permissions(self):
         if self.role:
             self.add_permission_record(role=self.role)
+        if self.territory:
+            self.add_permission_record(doctype_name="Territory", docname=self.territory)
+        if self.company:
+            self.add_permission_record(doctype_name="Company", docname=self.company)
+
+        if len(self.role_permission_profile_detail) > 0:
             for row in self.role_permission_profile_detail:
                 self.add_permission_record(
                     doctype_name=row.doctype_name, docname=row.docname
                 )
-            profiles_list = frappe.get_all(
-                "Role Permission Profile",
-                filters={"docstatus": 1, "role": self.role},
-                limit=1,
-            )
-            if len(profiles_list) > 0:
-                profile = frappe.get_doc(
-                    "Role Permission Profile", profiles_list[0].name
+
+        profiles_list = frappe.get_all(
+            "Role Permission Profile",
+            filters={"docstatus": 1, "role": self.role},
+            limit=1,
+        )
+        if len(profiles_list) > 0:
+            profile = frappe.get_doc("Role Permission Profile", profiles_list[0].name)
+            for row in profile.role_permission_profile_detail:
+                self.add_permission_record(
+                    doctype_name=row.doctype_name, docname=row.docname
                 )
-                for row in profile.role_permission_profile_detail:
-                    self.add_permission_record(
-                        doctype_name=row.doctype_name, docname=row.docname
-                    )
 
     def remove_permissions(self):
         to_remove = frappe.get_all(
             "Permission Record",
-            filters={"ref_doctype": "Permission Assignment", "ref_docname": self.name},
+            filters={"ref_doctype": "User Role Assignment", "ref_docname": self.name},
         )
         for rec in to_remove:
             frappe.delete_doc(

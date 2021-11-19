@@ -8,8 +8,10 @@
  "engine": "InnoDB",
  "field_order": [
   "user",
+  "company",
   "column_break_2",
   "role",
+  "territory",
   "role_level_controlled_user_permissions_section",
   "role_permission_profile_detail",
   "section_break_10",
@@ -45,8 +47,7 @@
    "fieldname": "role_permission_profile_detail",
    "fieldtype": "Table",
    "label": "Role Permission Profile Detail",
-   "options": "Role Permission Profile Detail",
-   "reqd": 1
+   "options": "Role Permission Profile Detail"
   },
   {
    "fieldname": "section_break_10",
@@ -57,18 +58,32 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Permission Assignment",
+   "options": "User Role Assignment",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "territory",
+   "fieldtype": "Link",
+   "label": "Territory",
+   "options": "Territory",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-12 20:49:35.119486",
+ "modified": "2021-11-18 21:26:58.211568",
  "modified_by": "Administrator",
  "module": "Permission",
- "name": "Permission Assignment",
+ "name": "User Role Assignment",
  "owner": "Administrator",
  "permissions": [
   {

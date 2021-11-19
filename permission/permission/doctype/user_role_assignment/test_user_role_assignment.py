@@ -4,5 +4,5 @@
 # import frappe
 import unittest
 
-class TestPermissionAssignment(unittest.TestCase):
+class TestUserRoleAssignment(unittest.TestCase):
 	pass

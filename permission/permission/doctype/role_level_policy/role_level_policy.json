@@ -8,6 +8,8 @@
  "engine": "InnoDB",
  "field_order": [
   "role",
+  "column_break_2",
+  "kyosk_territory_type",
   "section_break_2",
   "role_permission_profile_detail",
   "section_break_4",
@@ -54,11 +56,21 @@
    "fieldname": "overlappable",
    "fieldtype": "Check",
    "label": "Overlappable"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "kyosk_territory_type",
+   "fieldtype": "Link",
+   "label": "Kyosk Territory Type",
+   "options": "Kyosk Territory Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-11-16 09:49:35.123135",
+ "modified": "2021-11-18 21:22:38.928245",
  "modified_by": "Administrator",
  "module": "Permission",
  "name": "Role Level Policy",
