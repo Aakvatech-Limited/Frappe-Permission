@@ -141,3 +141,28 @@ class UserRoleAssignment(Document):
         record_doc.role = 1 if role else 0
         record_doc.role_name = role
         record_doc.insert(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def get_filterd_territorys(doctype, txt, searchfield, start, page_len, filters):
+    data = []
+    cust_filters = {}
+    if txt:
+        cust_filters["name"] = ["like", f"%{txt}%"]
+    if filters.get("role") and frappe.db.exists(
+        "Role Level Policy", filters.get("role")
+    ):
+        cust_filters["territory_type"] = frappe.get_value(
+            "Role Level Policy", filters.get("role"), "kyosk_territory_type"
+        )
+    try:
+        data = frappe.get_list(
+            "Territory",
+            filters=cust_filters,
+            fields=["name", "territory_type"],
+            page_length=page_len,
+            start=start,
+        )
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), str(e))
+    return data
