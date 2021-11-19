@@ -155,14 +155,13 @@ def get_filterd_territorys(doctype, txt, searchfield, start, page_len, filters):
         cust_filters["territory_type"] = frappe.get_value(
             "Role Level Policy", filters.get("role"), "kyosk_territory_type"
         )
-    try:
-        data = frappe.get_list(
-            "Territory",
-            filters=cust_filters,
-            fields=["name", "territory_type"],
-            page_length=page_len,
-            start=start,
-        )
-    except Exception as e:
-        frappe.log_error(frappe.get_traceback(), str(e))
+    data = frappe.get_list(
+        "Territory",
+        filters=cust_filters,
+        fields=["name", "territory_type"],
+        page_length=page_len,
+        start=start,
+        as_list=True,
+    )
+
     return data
