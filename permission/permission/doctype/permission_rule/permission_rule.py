@@ -60,9 +60,9 @@ class PermissionRule(Document):
             filters={"ref_doctype": "Permission Rule", "ref_docname": self.name},
         )
         for rec in to_remove:
-            frappe.delete_doc(
-                "Permission Record", rec.name, force=1, ignore_permissions=True
-            )
+            rec_doc = frappe.get_doc("Permission Record", rec.name)
+            if rec_doc.docstatus == 1:
+                rec_doc.cancel()
 
     def create_permissions(self):
         if self.disabled:

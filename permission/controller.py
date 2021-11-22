@@ -72,4 +72,5 @@ def add_permission_record(
             record_doc.assign = doctype_options.get("assign")
             record_doc.role = doctype_options.get("role")
             record_doc.role_name = doctype_options.get("role_name")
+            record_doc.docstatus = 1
             record_doc.insert(ignore_permissions=True)

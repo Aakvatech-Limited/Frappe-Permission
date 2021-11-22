@@ -35,7 +35,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Role",
-   "options": "Role",
+   "options": "Role Level Policy",
    "reqd": 1
   },
   {
@@ -81,7 +81,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-22 12:17:26.251131",
+ "modified": "2021-11-22 14:46:54.989884",
  "modified_by": "Administrator",
  "module": "Permission",
  "name": "User Role Assignment",

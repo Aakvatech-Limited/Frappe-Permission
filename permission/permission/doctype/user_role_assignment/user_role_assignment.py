@@ -14,7 +14,7 @@ class UserRoleAssignment(Document):
         self.validate_role()
         self.create_permissions()
 
-    def on_cancel(self):
+    def before_cancel(self):
         self.remove_permissions()
 
     def validate_role(self):
@@ -118,9 +118,13 @@ class UserRoleAssignment(Document):
             filters={"ref_doctype": "User Role Assignment", "ref_docname": self.name},
         )
         for rec in to_remove:
-            frappe.delete_doc(
-                "Permission Record", rec.name, force=1, ignore_permissions=True
-            )
+            rec_doc = frappe.get_doc("Permission Record", rec.name)
+            if rec_doc.docstatus == 1:
+                rec_doc.cancel()
+            # elif rec_doc.docstatus == 0:
+            #     frappe.delete_doc(
+            #         "Permission Record", rec.name, force=1, ignore_permissions=True
+            #     )
 
     def add_permission_record(self, role=None, doctype_name=None, docname=None):
         record_doc = frappe.new_doc("Permission Record")
@@ -132,6 +136,7 @@ class UserRoleAssignment(Document):
         record_doc.permission = 1 if docname else 0
         record_doc.role = 1 if role else 0
         record_doc.role_name = role
+        record_doc.docstatus = 1
         record_doc.insert(ignore_permissions=True)
 
 

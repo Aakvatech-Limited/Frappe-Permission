@@ -15,7 +15,7 @@ class PermissionRecord(Document):
         if not self.share and not self.permission and not self.assign and not self.role:
             frappe.throw(_("At least one option must be selected"))
 
-    def after_insert(self):
+    def on_submit(self):
         if self.assign:
             add_assign_to(
                 {
@@ -62,7 +62,13 @@ class PermissionRecord(Document):
                 role_doc.role = self.role_name
                 role_doc.insert(ignore_permissions=True)
 
-    def on_trash(self):
+    # def on_trash(self):
+    #     self.remove_permission()
+
+    def on_cancel(self):
+        self.remove_permission()
+
+    def remove_permission(self):
         if self.assign:
             remove_todo(self.doctype_name, self.docname, self.user)
         if self.assign or self.share:
