@@ -23,7 +23,7 @@ class RolePermissionProfile(Document):
 
     def remove_permissions(self):
         permission_assignment_list = frappe.get_all(
-            "Permission Assignment",
+            "User Role Assignment",
             filters={"role": self.role, "docstatus": 1},
             fields=["user", "name"],
         )
@@ -33,7 +33,7 @@ class RolePermissionProfile(Document):
                 to_remove = frappe.get_all(
                     "Permission Record",
                     filters={
-                        "ref_doctype": "Permission Assignment",
+                        "ref_doctype": "User Role Assignment",
                         "ref_docname": assignment.name,
                         "doctype_name": row.doctype_name,
                         "docname": row.docname,
@@ -48,7 +48,7 @@ class RolePermissionProfile(Document):
 
     def create_permissions(self):
         permission_assignment_list = frappe.get_all(
-            "Permission Assignment",
+            "User Role Assignment",
             filters={"role": self.role, "docstatus": 1},
             fields=["user", "name"],
         )
@@ -65,7 +65,7 @@ class RolePermissionProfile(Document):
 def add_permission_record(user, doctype_name, docname, ref_docname):
     record_doc = frappe.new_doc("Permission Record")
     record_doc.user = user
-    record_doc.ref_doctype = "Permission Assignment"
+    record_doc.ref_doctype = "User Role Assignment"
     record_doc.ref_docname = ref_docname
     record_doc.doctype_name = doctype_name
     record_doc.docname = docname
