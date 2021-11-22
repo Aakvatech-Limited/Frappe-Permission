@@ -39,6 +39,7 @@ class UserRoleAssignment(Document):
                     "User Role Assignment",
                     filters={
                         "role": self.role,
+                        "territory": self.territory,
                         "docstatus": 1,
                     },
                 )
