@@ -23,15 +23,6 @@ class UserRoleAssignment(Document):
             filters={"user": self.user, "docstatus": 1, "name": ["!=", self.name]},
             fields=["name", "role"],
         )
-        for assignment in user_assignments_list:
-            if frappe.db.exists("Role Level Policy", assignment.role):
-                overlappable = frappe.get_value(
-                    "Role Level Policy", assignment.role, "overlappable"
-                )
-                if not overlappable:
-                    frappe.throw(
-                        _("This User can't have more than one User Role Assignment")
-                    )
         if frappe.db.exists("Role Level Policy", self.role):
             policy = frappe.get_doc("Role Level Policy", self.role)
             if policy.number_of_actors and int(policy.number_of_actors) > 0:
