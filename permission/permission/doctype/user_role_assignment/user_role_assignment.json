@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "RUPA-.#####",
+ "autoname": "URA-.#####",
  "creation": "2021-11-10 20:56:39.445557",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -70,17 +70,18 @@
    "reqd": 1
   },
   {
+   "fetch_from": "territory.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
    "options": "Company",
-   "reqd": 1
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-18 21:26:58.211568",
+ "modified": "2021-11-22 12:17:26.251131",
  "modified_by": "Administrator",
  "module": "Permission",
  "name": "User Role Assignment",
