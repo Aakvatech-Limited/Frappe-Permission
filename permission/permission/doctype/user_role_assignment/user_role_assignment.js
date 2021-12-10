@@ -9,5 +9,10 @@ frappe.ui.form.on('User Role Assignment', {
 				filters: { 'role': frm.doc.role }
 			};
 		});
+		frm.set_query('user', function () {
+			return {
+				query: 'permission.permission.doctype.user_role_assignment.user_role_assignment.get_filterd_users',
+			};
+		});
 	}
 });

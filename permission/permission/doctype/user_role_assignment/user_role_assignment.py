@@ -162,3 +162,20 @@ def get_filterd_territorys(doctype, txt, searchfield, start, page_len, filters):
     )
 
     return data
+
+
+@frappe.whitelist()
+def get_filterd_users(doctype, txt, searchfield, start, page_len, filters):
+    cust_filters = {}
+    if txt:
+        cust_filters["name"] = ["like", f"%{txt}%"]
+    data = frappe.get_list(
+        "User",
+        filters=cust_filters,
+        fields=["name", "full_name"],
+        page_length=page_len,
+        start=start,
+        as_list=True,
+    )
+
+    return data
