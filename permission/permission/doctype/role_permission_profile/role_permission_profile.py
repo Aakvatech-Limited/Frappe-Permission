@@ -42,6 +42,9 @@ class RolePermissionProfile(Document):
                 to_remove_list.extend(to_remove)
 
         for rec in to_remove_list:
+            doc = frappe.get_doc("Permission Record", rec.name)
+            if doc.docstatus == 1:
+                doc.cancel()
             frappe.delete_doc(
                 "Permission Record", rec.name, force=1, ignore_permissions=True
             )
@@ -53,21 +56,6 @@ class RolePermissionProfile(Document):
             fields=["user", "name"],
         )
         for assignment in permission_assignment_list:
-            for row in self.role_permission_profile_detail:
-                add_permission_record(
-                    user=assignment.user,
-                    doctype_name=row.doctype_name,
-                    docname=row.docname,
-                    ref_docname=assignment.name,
-                )
-
-
-def add_permission_record(user, doctype_name, docname, ref_docname):
-    record_doc = frappe.new_doc("Permission Record")
-    record_doc.user = user
-    record_doc.ref_doctype = "User Role Assignment"
-    record_doc.ref_docname = ref_docname
-    record_doc.doctype_name = doctype_name
-    record_doc.docname = docname
-    record_doc.permission = 1
-    record_doc.insert(ignore_permissions=True)
+            doc = frappe.get_doc("User Role Assignment", assignment)
+            if doc:
+                doc.create_permissions()
