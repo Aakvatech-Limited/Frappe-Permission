@@ -89,6 +89,9 @@ class UserRoleAssignment(Document):
     def create_permissions(self):
         if self.role:
             self.add_permission_record(role=self.role)
+            user = frappe.get_doc("User", self.user)
+            user.set_system_user()
+            user.save()
         if self.territory:
             self.add_permission_record(doctype_name="Territory", docname=self.territory)
         if self.company:
