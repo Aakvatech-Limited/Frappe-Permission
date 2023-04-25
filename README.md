@@ -1,5 +1,3 @@
-Sure, here's a sample README.md file that you could use for GitHub:
-
 # Permissions Processing Code
 
 This is a simple Python code that manages permissions associated with a document in Frappe framework. It is released under the [MIT License](LICENSE).
